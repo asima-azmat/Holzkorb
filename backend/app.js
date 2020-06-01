@@ -10,9 +10,11 @@ api.set('port', config.port);
 
 const server = http.createServer(api);
 
-mongoose.set('useCreateIndex', true);
+const User = require('./src/models/user')
+const Product = require('./src/models/product')
+
 mongoose
-	.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+	.connect(config.mongoURI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
 	.then(() => server.listen(config.port))
 	.catch(err => {
 		console.log('Error connecting to the database', err.message);

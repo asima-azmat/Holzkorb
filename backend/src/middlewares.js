@@ -1,27 +1,19 @@
-"use strict";
+"use strict"
 
 const jwt = require('jsonwebtoken')
 const config = require('./config')
+const User = require('./models/user')
 
 function checkAuthentication(req, res, next) {
-	const token = req.headers['x-access-token']
-
-	if (!token) {
-		return res.status(401).send({
-			error: 'Unauthorized',
-			message: 'No token provided in the request'
+	const token = req.header('Authorization').replace('Bearer ', '')
+    const data = jwt.verify(token, config.JwtSecret)
+	User.findOne({ _id: data._id, 'tokens.token': token })
+		.then(user => {
+        	req.user = user
+			req.token = token	
+			next()
 		})
-	}
-
-	jwt.verify(token, config.JwtSecret, (err, decoded) => {
-		if (err) return res.status(402).send({
-			error: 'Unauthorized',
-			message: 'Failed to authentication token.'
-		})
-
-		req.userId = decoded.id
-		next()
-	})
+    	.catch(error => res.status(401).send({ error: 'Not authorized to access this resource' }))
 }
 
 function allowCrossDomain(req, res, next) {

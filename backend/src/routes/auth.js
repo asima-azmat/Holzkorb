@@ -1,37 +1,15 @@
 "use strict"
 
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt-nodejs')
+const express = require('express');
+const router = express.Router();
 
-const config = require('../config')
-const UserModel = require('../models/user')
+const middlewares = require('../middlewares');
+const AuthController = require('../controllers/user');
 
-function login(req, res) {
-	if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
-		error: 'Bad request',
-		message: 'The request body must containe a password property'
-	})
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+router.get('/me', middlewares.checkAuthentication, AuthController.me);
+router.delete('/logout', middlewares.checkAuthentication, AuthController.logout);
+router.delete('/logoutFromAllDevices', middlewares.checkAuthentication, AuthController.logoutFromAllDevices);
 
-	if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
-		error: 'Bad request',
-		message: 'The request body must containe a username property'
-	})
-
-	UserModel.findOne({username: req.body.username}).exec()
-		.then(user => {
-			const isPasswordValid = bcrypt.compareSync(req.body.password, user.password)
-			if (!isPasswordValid) return res.status(401).send({token: null})
-
-			const token = jwt.sign({id: user._id, username: user.username }, config.JwtSecret, {
-				expiresIn: 86400
-			})
-
-			res.status.json({token: token})
-		})
-		.catch(error => res.status(404).json({
-			error: 'User not found',
-			message: error.message
-		}))
-}
-
-module.exports = login
+module.exports = router;
