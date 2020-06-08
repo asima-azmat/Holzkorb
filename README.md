@@ -24,3 +24,13 @@ JWT JSON Web Token (JWT) - library for authorization
 Mongoose - MongoDB object-to-document-mapper including MongoDB access
 Helmet - Library for securing Express applications by setting HTTP headers
 Nodemon - Restarts application when changed files are saved
+
+# Deployment
+
+Heroku could be configured via Heroku Web-Interface (configure Github repository urls) for Heroku-App).
+We provide the source code for the backend and the frontend application on Github.
+The frontend application has two branches:
+1. Master branch: Regular Movie App
+2. Serverless branch: This version of the Movie App frontend has dummy data and can work without the backend application running
+We provide a deployed Backend on Heroku: https://seba-movies-api.herokuapp.com/
+You can also host your database on mLab: https://mlab.com/
