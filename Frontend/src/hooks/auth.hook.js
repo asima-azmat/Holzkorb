@@ -10,7 +10,7 @@ export const useAuth = () => {
     const login = useCallback((jwtToken, id) => {
         setToken(jwtToken)
         setUserId(id)
-
+        console.log(jwtToken)
         localStorage.setItem(storageName, JSON.stringify({
             userId: id, token: jwtToken
         }))
@@ -18,6 +18,7 @@ export const useAuth = () => {
 
 
     const logout = useCallback(() => {
+        console.log("Log out")
         setToken(null)
         setUserId(null)
         localStorage.removeItem(storageName)

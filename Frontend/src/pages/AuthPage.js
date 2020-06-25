@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,8 +8,8 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from '@material-ui/core/Typography';
 import {useHttp} from "../hooks/http.hook";
-import {AuthContext} from "../context/AuthContext";
-import history from './../history'
+import {useHistory} from 'react-router-dom'
+import {useAuth} from "../hooks/auth.hook";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const AuthPage = () => {
-    const auth = useContext(AuthContext)
+    const { login}= useAuth()
+    const history = useHistory()
     const classes = useStyles()
-    const {loading, request, error, clearError} = useHttp()
+    const {request} = useHttp()
     const [form, setForm] = useState({
         email: '', password: ''
     })
@@ -34,8 +35,11 @@ export const AuthPage = () => {
     const loginHandler = async () => {
         try {
             const data = await request('/auth/login', 'POST', {...form})
-            auth.login(data.token, data.userId)
-        } catch (e) {}
+            login(data.token, "firstname")
+            history.push("/search")
+        } catch (e) {
+            console.log("login error: " + e.message)
+        }
     }
 
     return (
@@ -60,9 +64,7 @@ export const AuthPage = () => {
                 <CardActions>
                     <div className={classes.button}>
                         <Button variant="contained" color="primary" onClick={loginHandler}>Sign in</Button>
-                        <from action="/registration">
-                            <Button variant="contained" onClick={()=> history.push('/registration')}>Sign up</Button>
-                        </from>
+                        <Button variant="contained" onClick={()=> history.push('/registration')}>Sign up</Button>
                     </div>
                 </CardActions>
             </Card>

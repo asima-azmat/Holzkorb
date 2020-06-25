@@ -11,11 +11,16 @@ export const useHttp = () => {
                 body = JSON.stringify(body)
                 headers['Content-Type'] = 'application/json'
             }
-
-            const response = await fetch(url, {method, body, headers})
+            const user = {}
+            user.tokens = body
+            const response = await fetch(url, {method, body, headers, user})
+            if (method === "DELETE") {
+                return
+            }
             const data = await response.json()
 
             if (!response.ok) {
+                console.log("message: ", response)
                 throw new Error(data.message || 'something goes wrong in http request')
             }
 

@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
-import history from "../history";
+import {useHistory} from 'react-router-dom'
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
 export const RegistrationPage = () => {
     const auth = useContext(AuthContext)
     const classes = useStyles()
-    const {loading, request, error, clearError} = useHttp()
+    const history = useHistory()
+    const {request} = useHttp()
     const [form, setForm] = useState({
         firstName:'', lastName:'', email: '', password: ''
     })
