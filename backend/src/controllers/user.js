@@ -6,7 +6,7 @@ function register(req, res) {
     const user = new User(req.body)
     user.save()
         .then(user => user.generateAuthToken())
-        .then(token => res.status(201).send({ user, token }))
+        .then( token => res.status(201).send({ user, token }))
         .catch(error => res.status(400).send(error))
 }
 
