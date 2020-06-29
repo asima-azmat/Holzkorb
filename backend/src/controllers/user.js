@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('../models/user')
 const router = express.Router()
+const mongoose = require("mongoose")
 
 function register(req, res) {
     const user = new User(req.body)
@@ -20,6 +21,13 @@ function login(req, res) {
 
 function me(req, res) {
     res.send(req.user)
+}
+
+function update(req, res) {
+    const {id, update} = req.body
+    User.updateOne({_id: mongoose.Types.ObjectId(id)}, {$set: update})
+        .then(() => res.status(200).send())
+        .catch(error => res.status(400).send(error))
 }
 
 function logout(req, res) {
