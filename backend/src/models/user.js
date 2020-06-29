@@ -37,27 +37,29 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: 8
     },
-    address: {
-        type: new mongoose.Schema({
-            postalCode: {
-                type: String,
-                required: true
-            },
-            town: {
-                type: String,
-                required: true
-            },
-            streetName: {
-                type: String,
-                required: true
-            },
-            houseNumber: {
-                type: String,
-                required: true
-            }
-        }),
-        required: false
-    },
+    addresses:[ {
+        address: {
+            type: new mongoose.Schema({
+                postalCode: {
+                    type: String,
+                    required: true
+                },
+                town: {
+                    type: String,
+                    required: true
+                },
+                streetName: {
+                    type: String,
+                    required: true
+                },
+                houseNumber: {
+                    type: String,
+                    required: true
+                }
+            }),
+            required: false
+        }
+    }],
     tokens: [{
         token: {
             type: String,
