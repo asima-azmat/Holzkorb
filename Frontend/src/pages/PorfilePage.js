@@ -42,7 +42,7 @@ export const ProfilePage = () => {
 
     return (<Grid>
         <Grid item>
-            <PersonalInfo/>
+            {user && <PersonalInfo {...user}/>}
         </Grid>
         <Grid container spacing={2} alignItems="stretch">
             {user.addresses && user.addresses.map(addressItem => getAddressCard(addressItem.address))}
