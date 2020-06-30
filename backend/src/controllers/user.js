@@ -23,9 +23,10 @@ function me(req, res) {
     res.send(req.user)
 }
 
-function update(req, res) {
-    const {id, update} = req.body
-    User.updateOne({_id: mongoose.Types.ObjectId(id)}, {$set: update})
+function addAddress(req, res) {
+    const {id, address} = req.body
+    User.findById(id)
+        .then(user => user.addAddress(address))
         .then(() => res.status(200).send())
         .catch(error => res.status(400).send(error))
 }
@@ -51,7 +52,7 @@ module.exports = {
     register,
     login,
     me,
-    update,
+    addAddress,
     logout,
     logoutFromAllDevices
 }

@@ -86,6 +86,14 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+userSchema.methods.addAddress = async function (address) {
+    // append address
+    //TODO check for uniqueness
+    const user = this
+    user.addresses = user.addresses.concat({address})
+    await user.save()
+}
+
 userSchema.statics.findByCredentials = async (email, password) => {
     // Search for a user by email and password.
     const user = await User.findOne({email})
