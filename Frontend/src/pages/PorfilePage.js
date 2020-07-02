@@ -40,13 +40,17 @@ export const ProfilePage = () => {
         return <Loader/>
     }
 
-    return (<Grid>
-        <Grid item>
-            {user && <PersonalInfo {...user}/>}
+    return (<Grid container>
+        <Grid item xs={2}/>
+        <Grid container xs={8}>
+            <Grid item>
+                {user && <PersonalInfo {...user}/>}
+            </Grid>
+            <Grid container spacing={2} alignItems="stretch">
+                {user.addresses && user.addresses.map(addressItem => getAddressCard(addressItem.address))}
+                <AddNewAddressCard/>
+            </Grid>
         </Grid>
-        <Grid container spacing={2} alignItems="stretch">
-            {user.addresses && user.addresses.map(addressItem => getAddressCard(addressItem.address))}
-            <AddNewAddressCard/>
-        </Grid>
+        <Grid item xs={2}/>
     </Grid>)
 }
