@@ -13,15 +13,20 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "autoprefixer": "^9.8.4",
     "material-components-web": "^6.0.0",
     "materialize-css": "^1.0.0-rc.2",
+    "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.1",
+    "tailwindcss": "^1.4.6"
   },
   "scripts": {
+    "prestart": "tailwind build ./src/assets/css/index.tailwind.css -c ./tailwind.js -o ./src/assets/css/index.css",
     "start": "react-scripts start",
+    "prebuild": "tailwind build ./src/assets/css/index.tailwind.css -c ./tailwind.js -o ./src/assets/css/index.css",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/icons": "^4.9.1"
+    "@material-ui/icons": "^4.9.1",
+    "font-awesome": "^4.7.0"
   }
 }
