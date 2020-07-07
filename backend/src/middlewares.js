@@ -5,7 +5,8 @@ const config = require('./config')
 const User = require('./models/user')
 
 function checkAuthentication(req, res, next) {
-	const token = req.header('Authorization').replace('Bearer ', '')
+	console.log(req.header('Authorization'))
+	const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : ''
     const data = jwt.verify(token, config.JwtSecret)
 	User.findOne({ _id: data._id, 'tokens.token': token })
 		.then(user => {
@@ -17,9 +18,16 @@ function checkAuthentication(req, res, next) {
 }
 
 function allowCrossDomain(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Methods', 'GET')
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+	// Set CORS headers
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Request-Method', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+	res.setHeader('Access-Control-Allow-Headers', '*');
+	if ( req.method === 'OPTIONS' ) {
+		res.writeHead(200);
+		res.end();
+		return;
+	}
     next()
 }
 

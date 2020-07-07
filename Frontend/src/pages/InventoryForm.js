@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import {AuthContext} from "../context/AuthContext";
 
 const InventoryForm = ({
   match: {
     params: { inventoryId },
   },
 }) => {
+  const {token} = useContext(AuthContext)
   const isCreate = inventoryId === 'create';
+  const [product, setProduct] = useState('');
+  const [stock, setStock] = useState('');
+  const [price, setPrice] = useState('');
+  const [minOrder, setMinOrder] = useState('');
+  const [startDate, setFromDate] = useState('');
+  const [endDate, setToDate] = useState('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch('http://localhost:5000/inventory', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId: 2,
+        totalUnitsCount: stock,
+        pricePerUnit: price,
+        minUnitsPerOrder: minOrder,
+        startDate,
+        endDate,
+        orderUnit: 'KG',
+      }),
+    }).catch((e) => console.error(e));
+  };
   return (
     <main className="inventory-form">
       <div className="container mx-auto px-4 sm:px-8 rounded overflow-hidden shadow-lg mt-12 py-8 border lg:w-3/5 w-full">
@@ -15,7 +42,7 @@ const InventoryForm = ({
             ? 'Create new Inventory Item'
             : `Edit Inventory for ${inventoryId}`}
         </h2>
-        <form className="w-full">
+        <form className="w-full" onSubmit={handleSubmit}>
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full px-3">
               <label
@@ -25,6 +52,7 @@ const InventoryForm = ({
               </label>
               <div className="relative w-full md:w-1/2">
                 <select
+                  onChange={(e) => setProduct(e.target.value)}
                   required
                   className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                   <option value="1">Valencia Orange</option>
@@ -54,6 +82,7 @@ const InventoryForm = ({
                 Available Amount (in Kilograms)
               </label>
               <input
+                onChange={(e) => setStock(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-stock"
                 type="number"
@@ -68,6 +97,7 @@ const InventoryForm = ({
                 Min. Order (in Kilograms)
               </label>
               <input
+                onChange={(e) => setMinOrder(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-min-order"
                 type="number"
@@ -85,6 +115,7 @@ const InventoryForm = ({
                 Price in Euros
               </label>
               <input
+                onChange={(e) => setPrice(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-price"
                 type="number"
@@ -101,6 +132,7 @@ const InventoryForm = ({
                 Available From
               </label>
               <input
+                onChange={(e) => setFromDate(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-from-date"
                 type="date"
@@ -116,6 +148,7 @@ const InventoryForm = ({
                 Available To (optional)
               </label>
               <input
+                onChange={(e) => setToDate(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-from-date"
                 type="text"
