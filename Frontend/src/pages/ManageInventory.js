@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ManageInventory = () => {
   const [inventory, setInventory] = useState([]);
   useEffect(() => {
-    if (window.localStorage.getItem('isLoading')) {
+    if (window.localStorage.getItem('isLoading') && parseInt(window.localStorage.getItem('isLoading')) === 1) {
       window.localStorage.setItem('isLoading', 0)
       toast("Successufly updated your inventory", {})
     }
@@ -116,7 +116,7 @@ const ManageInventory = () => {
                         </div>
                         <div className="ml-3">
                           <Link
-                            to={`/inventory/${1}`}
+                            to={`/inventory/${item._id}`}
                             className="text-blue-500 hover:text-blue-700 underline hover:no-underline whitespace-no-wrap">
                             Valencia Orange
                           </Link>
@@ -124,14 +124,14 @@ const ManageInventory = () => {
                       </div>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">100</p>
+                      <p className="text-gray-900 whitespace-no-wrap">{item.totalUnitsCount}</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">5</p>
+                      <p className="text-gray-900 whitespace-no-wrap">{item.minUnitsPerOrder}</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap">
-                        3,00 EUR
+                        {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(item.pricePerUnit)}
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -140,7 +140,7 @@ const ManageInventory = () => {
                           aria-hidden
                           className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
                         <span className="relative">
-                          Active (since 24th June)
+                          Active (since {new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(item.startDate))})
                         </span>
                       </span>
                     </td>

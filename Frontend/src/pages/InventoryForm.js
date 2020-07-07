@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {AuthContext} from "../context/AuthContext";
 
@@ -9,25 +9,43 @@ const InventoryForm = ({
   },
   history
 }) => {
-console.log('history', history)
+  useEffect(() => window.localStorage.setItem('isLoading', 0), [])
   const {token} = useContext(AuthContext)
   const isCreate = inventoryId === 'create';
-  const [product, setProduct] = useState(1);
-  const [stock, setStock] = useState(500);
-  const [price, setPrice] = useState(6);
-  const [minOrder, setMinOrder] = useState(6);
-  const [startDate, setFromDate] = useState('07-07-2020');
-  const [endDate, setToDate] = useState('');
+  const [productToEdit, setProductToEdit] = useState({})
+  
+  const initialState = {
+    productId: '',
+    totalUnitsCount: '',
+    pricePerUnit: '',
+    minUnitsPerOrder: '',
+    startDate: null,
+    endDate: null,
+  }
+  const [product, setProduct] = useState(isCreate ? initialState.product : productToEdit.productId);
+  const [stock, setStock] = useState(isCreate ? initialState.stock : productToEdit.totalUnitsCount);
+  const [price, setPrice] = useState(isCreate ? initialState.price : productToEdit.pricePerUnit);
+  const [minOrder, setMinOrder] = useState(isCreate ? initialState.minOrder : productToEdit.minUnitsPerOrder);
+  const [startDate, setFromDate] = useState(isCreate ? initialState.startDate : productToEdit.startDate);
+  const [endDate, setToDate] = useState(isCreate ? initialState.endDate : productToEdit.endDate);
+  useEffect(() => fetch(`http://localhost:5000/inventory/${inventoryId}`).then(res => res.json()).then(inventory => {
+    setProduct(inventory.productId)
+    setStock(inventory.totalUnitsCount)
+    setPrice(inventory.pricePerUnit)
+    setMinOrder(inventory.minUnitsPerOrder)
+    setFromDate(inventory.startDate)
+    setToDate(inventory.endDate)
+  }), [inventoryId])
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5000/inventory', {
-      method: 'POST',
+    fetch(`http://localhost:5000/inventory${!isCreate && `/${inventoryId}`}`, {
+      method: isCreate ? 'POST' : 'PUT',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,                                    
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        productId: 2,
+        productId: product,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
         totalUnitsCount: stock,
         pricePerUnit: price,
         minUnitsPerOrder: minOrder,
@@ -60,7 +78,9 @@ console.log('history', history)
                 <select
                   onChange={(e) => setProduct(e.target.value)}
                   required
+                  value={product}
                   className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Choose a product</option>
                   <option value="1">Valencia Orange</option>
                   <option value="2">Moroccan Olives</option>
                   <option value="3">Strawberries</option>
@@ -93,7 +113,9 @@ console.log('history', history)
                 id="grid-stock"
                 type="number"
                 placeholder="500"
+                min="1"
                 required
+                value={stock}
               />
             </div>
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -104,15 +126,17 @@ console.log('history', history)
               </label>
               <input
                 onChange={(e) => setMinOrder(e.target.value)}
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-min-order"
                 type="number"
-                placeholder="5"
+                placeholder="10"
+                min="1"
                 required
+                value={minOrder}
               />
-              <p className="text-red-500 text-xs italic">
+              {/*<p className="text-red-500 text-xs italic">
                 Please fill out this field.
-              </p>
+          </p>*/}
             </div>
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
@@ -125,8 +149,11 @@ console.log('history', history)
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-price"
                 type="number"
+                step=".01"
+                min="1"
                 placeholder="4.50"
                 required
+                value={price}
               />
             </div>
           </div>
@@ -143,8 +170,8 @@ console.log('history', history)
                 id="grid-from-date"
                 type="date"
                 required
+                value={startDate}
                 placeholder="20-06-2020"
-                defaultValue={new Date().toISOString().substr(0, 10)}
               />
             </div>
             <div className="w-full md:w-1/2 px-3">
@@ -157,7 +184,8 @@ console.log('history', history)
                 onChange={(e) => setToDate(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-from-date"
-                type="text"
+                type="date"
+                value={endDate}
                 placeholder="20-09-2020"
               />
             </div>
