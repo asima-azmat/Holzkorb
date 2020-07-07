@@ -1,13 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageInventory = () => {
   const [inventory, setInventory] = useState([]);
   useEffect(() => {
+    if (window.localStorage.getItem('isLoading')) {
+      window.localStorage.setItem('isLoading', 0)
+      toast("Successufly updated your inventory", {})
+    }
     fetch('http://localhost:5000/inventory').then(res => res.json()).then(inventory => setInventory(inventory))
   }, [])
   return (
     <main className="manage-inventory">
+      <ToastContainer/>
       <div className="container mx-auto px-4 sm:px-8">
         <div className="py-8">
           <div className="flex justify-between">

@@ -2,18 +2,21 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import {AuthContext} from "../context/AuthContext";
 
+
 const InventoryForm = ({
   match: {
     params: { inventoryId },
   },
+  history
 }) => {
+console.log('history', history)
   const {token} = useContext(AuthContext)
   const isCreate = inventoryId === 'create';
-  const [product, setProduct] = useState('');
-  const [stock, setStock] = useState('');
-  const [price, setPrice] = useState('');
-  const [minOrder, setMinOrder] = useState('');
-  const [startDate, setFromDate] = useState('');
+  const [product, setProduct] = useState(1);
+  const [stock, setStock] = useState(500);
+  const [price, setPrice] = useState(6);
+  const [minOrder, setMinOrder] = useState(6);
+  const [startDate, setFromDate] = useState('07-07-2020');
   const [endDate, setToDate] = useState('');
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +35,9 @@ const InventoryForm = ({
         endDate,
         orderUnit: 'KG',
       }),
+    }).then(res => {
+      window.localStorage.setItem('isLoading', 1)
+      history.push('/manage-inventory')
     }).catch((e) => console.error(e));
   };
   return (
