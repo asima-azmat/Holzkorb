@@ -6,11 +6,15 @@ import {RegistrationPage} from "./pages/RegistrationPage";
 import {RegistrationOkPage} from "./pages/RegistrationOkPage"
 import history from "./history";
 import {ProfilePage} from "./pages/PorfilePage";
+import {MainPage} from "./pages/MainPage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (
             <Switch>
+                <Route path="/" exact>
+                    <MainPage/>
+                </Route>
                 <Route path="/profile" exact>
                     <ProfilePage/>
                 </Route>
@@ -29,6 +33,9 @@ export const useRoutes = isAuthenticated => {
         <Router history={history}>
             <Switch>
                 <Route path="/" exact>
+                    <MainPage/>
+                </Route>
+                <Route path="/auth" exact>
                     <AuthPage/>
                 </Route>
                 <Route path="/registration">

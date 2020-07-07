@@ -67,6 +67,10 @@ export const Navbar = (isAuthenticated) => {
         handleMenuClose()
     }
 
+    const handleLogoClick = () => {
+        history.push('/')
+    }
+
     const menuId = 'menu-id'
 
     const renderMenu = (
@@ -101,7 +105,7 @@ export const Navbar = (isAuthenticated) => {
         <div className={classes.root}>
             <AppBar position="sticky">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6" className={classes.title} onClick={handleLogoClick}>
                         Holzkorb
                     </Typography>
                     <div>
