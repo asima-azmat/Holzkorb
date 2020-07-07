@@ -37,6 +37,29 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: 8
     },
+    addresses:[ {
+        address: {
+            type: new mongoose.Schema({
+                postalCode: {
+                    type: String,
+                    required: true
+                },
+                town: {
+                    type: String,
+                    required: true
+                },
+                streetName: {
+                    type: String,
+                    required: true
+                },
+                houseNumber: {
+                    type: String,
+                    required: true
+                }
+            }),
+            required: false
+        }
+    }],
     tokens: [{
         token: {
             type: String,
@@ -54,7 +77,7 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
     // Generate an auth token for the user
     const user = this
     const token = jwt.sign({_id: user._id}, config.JwtSecret)
@@ -63,15 +86,23 @@ userSchema.methods.generateAuthToken = async function() {
     return token
 }
 
+userSchema.methods.addAddress = async function (address) {
+    // append address
+    //TODO check for uniqueness
+    const user = this
+    user.addresses = user.addresses.concat({address})
+    await user.save()
+}
+
 userSchema.statics.findByCredentials = async (email, password) => {
     // Search for a user by email and password.
-    const user = await User.findOne({ email} )
+    const user = await User.findOne({email})
     if (!user) {
-        throw new Error({ error: 'Invalid login credentials' })
+        throw new Error({error: 'Invalid login credentials'})
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     if (!isPasswordMatch) {
-        throw new Error({ error: 'Invalid login credentials' })
+        throw new Error({error: 'Invalid login credentials'})
     }
     return user
 }

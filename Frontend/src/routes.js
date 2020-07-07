@@ -5,11 +5,15 @@ import {AuthPage} from "./pages/AuthPage";
 import {RegistrationPage} from "./pages/RegistrationPage";
 import {RegistrationOkPage} from "./pages/RegistrationOkPage"
 import history from "./history";
+import {ProfilePage} from "./pages/PorfilePage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (
             <Switch>
+                <Route path="/profile" exact>
+                    <ProfilePage/>
+                </Route>
                 <Route path="/search" exact>
                     <SearchPage/>
                 </Route>
