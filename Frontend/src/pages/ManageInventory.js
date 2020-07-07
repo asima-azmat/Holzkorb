@@ -1,7 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 
 const ManageInventory = () => {
+  const [inventory, setInventory] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:5000/inventory').then(res => res.json()).then(inventory => setInventory(inventory))
+  }, [])
   return (
     <main className="manage-inventory">
       <div className="container mx-auto px-4 sm:px-8">
@@ -93,7 +97,7 @@ const ManageInventory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  {inventory.map((item) => (<tr>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-10 h-10">
@@ -172,7 +176,7 @@ const ManageInventory = () => {
                         </g>
                       </svg>
                     </td>
-                  </tr>
+                  </tr>))}
                   <tr>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex items-center">

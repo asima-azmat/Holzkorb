@@ -8,6 +8,7 @@ const middlewares = require('./middlewares')
 
 const auth = require('./routes/auth')
 const product = require('./routes/product')
+const inventoryItem = require('./routes/inventory-item')
 
 const api = express()
 
@@ -24,6 +25,7 @@ api.get('/', (req, res) => {
 
 api.use('/auth', auth)
 api.use('/products', product)
+api.use('/inventory', inventoryItem)
 
 // error handler
 api.use(function(err, req, res, next) {

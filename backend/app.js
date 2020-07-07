@@ -12,6 +12,7 @@ const server = http.createServer(api);
 
 const User = require('./src/models/user')
 const Product = require('./src/models/product')
+const InventoryItem = require('./src/models/inventory-item')
 
 mongoose
 	.connect(config.mongoURI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })

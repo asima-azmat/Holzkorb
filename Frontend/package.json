@@ -16,6 +16,7 @@
     "autoprefixer": "^9.8.4",
     "material-components-web": "^6.0.0",
     "materialize-css": "^1.0.0-rc.2",
+    "nodemon": "^2.0.4",
     "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
