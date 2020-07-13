@@ -6,7 +6,7 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const ProductController = require('../controllers/product');
 
-router.get('/', ProductController.list);
+router.get('/', middlewares.checkAuthentication, ProductController.list);
 router.post('/', middlewares.checkAuthentication, ProductController.create);
 router.get('/:id', ProductController.read);
 router.put('/:id', middlewares.checkAuthentication, ProductController.update);
